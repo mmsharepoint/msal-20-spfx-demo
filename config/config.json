@@ -1,0 +1,18 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "my-mails-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/myMails/MyMailsWebPart.js",
+          "manifest": "./src/webparts/myMails/MyMailsWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "MyMailsWebPartStrings": "lib/webparts/myMails/loc/{locale}.js"
+  }
+}
