@@ -76,7 +76,7 @@ export default class MyMails extends React.Component<IMyMailsProps, IMyMailsStat
   }
 
   private loadMails = () => {
-    const accounts = null; //this.myMSALObj.getAllAccounts();
+    const accounts = this.myMSALObj.getAllAccounts();
     if (accounts !== null) {
       this.handleLoggedInUser(accounts);
     }
@@ -153,7 +153,7 @@ export default class MyMails extends React.Component<IMyMailsProps, IMyMailsStat
     } else {
         accountObj = currentAccounts[0];
     }
-    if (accountObj === null) {
+    if (accountObj !== null) {
       this.acquireAccessToken(this.ssoRequest, accountObj)
       .then((accessToken) => {
         this.getMailsFromGraph(accessToken).then(mails => {
