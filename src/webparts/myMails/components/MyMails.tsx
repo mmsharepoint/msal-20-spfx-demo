@@ -2,8 +2,8 @@ import * as React from 'react';
 import styles from './MyMails.module.scss';
 import { PublicClientApplication, 
           InteractionRequiredAuthError,          
-          AuthenticationResult,
-          AuthorizationUrlRequest } from "@azure/msal-browser";
+          AuthorizationUrlRequest, 
+          AccountInfo} from "@azure/msal-browser";
 import { HttpClient, HttpClientResponse } from "@microsoft/sp-http";
 import { IMail } from '../../../model/IMail';
 import { IMyMailsProps } from './IMyMailsProps';
@@ -11,6 +11,9 @@ import { IMyMailsState } from './IMyMailsState';
 
 export default class MyMails extends React.Component<IMyMailsProps, IMyMailsState> {  
   private myMSALObj: PublicClientApplication;
+  private ssoRequest: AuthorizationUrlRequest = {
+    scopes: ["https://graph.microsoft.com/Mail.Read"]    
+  };
 
   constructor(props) {
     super(props);
@@ -28,29 +31,19 @@ export default class MyMails extends React.Component<IMyMailsProps, IMyMailsStat
     this.state = {
       mails: []
     };
-    this.myMSALObj.handleRedirectPromise().then((tokenResponse) => {
-      let accountObj = null;
+    this.myMSALObj.handleRedirectPromise().then((tokenResponse) => {      
       if (tokenResponse !== null) {
         const access_token = tokenResponse.accessToken;
-        this.getMailsByMSAL(access_token).then(mails => {
+        this.getMailsFromGraph(access_token).then(mails => {
           this.setState(() => {
             return { mails: mails };
           });      
         });
       } else 
       {
-        const currentAccounts = this.myMSALObj.getAllAccounts();
-        if (currentAccounts === null) {
-            // No user signed in
-            return;
-        } else if (currentAccounts.length > 1) {
-            // More than one user signed in, find desired user with 
-            accountObj = this.myMSALObj.getAccountByUsername(this.props.userMail);
-        } else {
-            accountObj = currentAccounts[0];
-        }
-        // acquireAccessToken with request and request.account = accountObject
-        // then go on ...
+        // In case we would like to directly load data in case of NO redirect:
+        // const currentAccounts = this.myMSALObj.getAllAccounts();
+        // this.handleLoggedInUser(currentAccounts);
       }      
     }).catch((error) => {
         console.log(error);
@@ -83,17 +76,23 @@ export default class MyMails extends React.Component<IMyMailsProps, IMyMailsStat
   }
 
   private loadMails = () => {
-    this.getAccessTokenByMSAL()
+    const accounts = null; //this.myMSALObj.getAllAccounts();
+    if (accounts !== null) {
+      this.handleLoggedInUser(accounts);
+    }
+    else {
+      this.loginForAccessTokenByMSAL()
       .then((token) => {
-        this.getMailsByMSAL(token).then(mails => {
+        this.getMailsFromGraph(token).then(mails => {
           this.setState(() => {
             return { mails: mails };
           });      
         });
       });
+    }    
   }
 
-  private async getMailsByMSAL(accessToken: string): Promise<any> {
+  private async getMailsFromGraph(accessToken: string): Promise<any> {
     if (accessToken !== null) {
       const graphMailEndpoint: string = "https://graph.microsoft.com/v1.0/me/messages";
       return this.props.httpClient
@@ -121,24 +120,20 @@ export default class MyMails extends React.Component<IMyMailsProps, IMyMailsStat
       }
   }
 
-  private async getAccessTokenByMSAL(): Promise<string> {  
-    const ssoRequest = {
-      scopes: ["https://graph.microsoft.com/Mail.Read"],
-      loginHint: this.props.userMail
-    };
-    const accounts = this.myMSALObj.getAllAccounts();
-    return this.myMSALObj.ssoSilent(ssoRequest).then((response) => {
-      return this.acquireAccessToken(ssoRequest, response);  
+  private async loginForAccessTokenByMSAL(): Promise<string> {
+    this.ssoRequest.loginHint = this.props.userMail;  
+    return this.myMSALObj.ssoSilent(this.ssoRequest).then((response) => {
+      return response.accessToken;  
     }).catch((error) => {  
         console.log(error);
         if (error instanceof InteractionRequiredAuthError) {
-          return this.myMSALObj.loginPopup(ssoRequest)
+          return this.myMSALObj.loginPopup(this.ssoRequest)
           .then((response) => {
-            return this.acquireAccessToken(ssoRequest, response);
+            return response.accessToken;
           }) 
           .catch(error => {
             if (error.message.indexOf('popup_window_error') > -1) { // Popups are blocked
-              return this.redirectLogin(ssoRequest);
+              return this.redirectLogin(this.ssoRequest);
             }            
           });
         } else {
@@ -147,10 +142,33 @@ export default class MyMails extends React.Component<IMyMailsProps, IMyMailsStat
     });  
   }
 
-  private async acquireAccessToken(ssoRequest: AuthorizationUrlRequest, authResult: AuthenticationResult): Promise<string> {
+  private handleLoggedInUser(currentAccounts: AccountInfo[]) {
+    let accountObj = null;
+    if (currentAccounts === null) {
+      // No user signed in
+      return;
+    } else if (currentAccounts.length > 1) {
+        // More than one user is authenticated, get current one 
+        accountObj = this.myMSALObj.getAccountByUsername(this.props.userMail);
+    } else {
+        accountObj = currentAccounts[0];
+    }
+    if (accountObj === null) {
+      this.acquireAccessToken(this.ssoRequest, accountObj)
+      .then((accessToken) => {
+        this.getMailsFromGraph(accessToken).then(mails => {
+          this.setState(() => {
+            return { mails: mails };
+          });      
+        });
+      });
+    }    
+  }
+
+  private async acquireAccessToken(ssoRequest: AuthorizationUrlRequest, account: AccountInfo): Promise<string> {
     const accessTokenRequest = {
       scopes: ssoRequest.scopes,
-      account: authResult.account
+      account: account
     };
     return this.myMSALObj.acquireTokenSilent(accessTokenRequest).then((val) => {            
       return val.accessToken;

@@ -19,9 +19,9 @@
     "group": { "default": "Other" },
     "title": { "default": "MyMails" },
     "description": { "default": "MyMails retrieved with MSAL.js 2.0" },
-    "officeFabricIconFontName": "Page",
+    "officeFabricIconFontName": "AzureAPIManagement",
     "properties": {
-      "applicationID": "",
+      "applicationID": "00000000-0000-0000-0000-000000000000",
       "redirectUri": "https://YOURTENANT.sharepoint.com/_layouts/15/workbench.aspx",
       "tenantUrl": "YOURTENANT.onmicrosoft.com"
     }
