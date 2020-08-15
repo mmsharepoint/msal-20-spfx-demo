@@ -14,7 +14,7 @@ A detailed functionality and technical description can be found in the [author's
 
 ## Used SharePoint Framework Version
 
-![drop](https://img.shields.io/badge/drop-1.10.0-green.svg)
+![drop](https://img.shields.io/badge/drop-1.11.0-green.svg)
 
 ## Solution
 
@@ -26,8 +26,8 @@ outlook-2-sp-spfx| Markus Moeller ([@moeller2_0](http://www.twitter.com/moeller2
 
 Version|Date|Comments
 -------|----|--------
-1.0|January 29, 2020|Initial release
-1.1|April 06, 2020|Open extensions to store metadata added
+1.0|August 15, 2020|Initial release
+||
 
 ## Disclaimer
 

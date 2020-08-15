@@ -5,7 +5,14 @@
     "id": "bea4216b-8ae7-4283-9d27-f6e6716c7aa6",
     "version": "1.0.0.0",
     "includeClientSideAssets": true,
-    "isDomainIsolated": false
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "Contoso",
+      "privacyUrl": "https://contoso.com/privacy",
+      "termsOfUseUrl": "https://contoso.com/terms-of-use",
+      "websiteUrl": "https://contoso.com/my-app",
+      "mpnId": "000000"
+    }
   },
   "paths": {
     "zippedPackage": "solution/msal-20-spfx.sppkg"
