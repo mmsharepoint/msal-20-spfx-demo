@@ -1,26 +1,60 @@
 ## msal-20-spfx
 
-This is where you include your WebPart documentation.
+## Summary
+This webpart demosntrates the authentication and access token acquisition with MSAL.js 2.0 inside SharePoint Framework (SPFx). On a button click it tries three login options
+* silent
+* popup
+* redirect
+and in case a login already took place previously it first tries to acquire in access token from cache or per refresh.
 
-### Building the code
+## msal-20-spfx in action
+![WebPartInAction](https://mmsharepoint.files.wordpress.com/2020/08/04mailresult.png)
 
-```bash
-git clone the repo
-npm i
-npm i -g gulp
-gulp
-```
+A detailed functionality and technical description can be found in the [author's blog series](https://mmsharepoint.wordpress.com)
 
-This package produces the following:
+## Used SharePoint Framework Version
 
-* lib/* - intermediate-stage commonjs build artifacts
-* dist/* - the bundled script, along with other resources
-* deploy/* - all resources which should be uploaded to a CDN.
+![drop](https://img.shields.io/badge/drop-1.10.0-green.svg)
 
-### Build options
+## Solution
 
-gulp clean - TODO
-gulp test - TODO
-gulp serve - TODO
-gulp bundle - TODO
-gulp package-solution - TODO
+Solution|Author(s)
+--------|---------
+outlook-2-sp-spfx| Markus Moeller ([@moeller2_0](http://www.twitter.com/moeller2_0))
+
+## Version history
+
+Version|Date|Comments
+-------|----|--------
+1.0|January 29, 2020|Initial release
+1.1|April 06, 2020|Open extensions to store metadata added
+
+## Disclaimer
+
+**THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.**
+
+---
+
+## Minimal Path to Awesome
+* Clone this repository
+* in the command line run:
+  * restore dependencies: `npm install`
+  * build solution `gulp build --ship`
+  * bundle solution: `gulp bundle --ship`
+  * package solution: `gulp package-solution --ship`
+  * locate solution at `.\sharepoint\solution\msal-20-spfx.sppkg` 
+  * upload it to your tenant app catalog
+  * Register an app in Azure AD as SPA with a redirect URI
+  * Install your webpart on a given site 
+  * Instantiate your webpart on a page in that site
+  * Configure it with app id, your redirect URI (best: That page's url) and your tenant domain (YOURTENANT.onmicrosoft.com)
+
+## Features
+
+This webpart shows the following capabilities on top of the SharePoint Framework:
+
+* MSAL 2.0 authorization code flow including
+  * silent login
+  * popup login
+  * redirect login
+  * token acquisition

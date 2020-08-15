@@ -124,15 +124,15 @@ export default class MyMails extends React.Component<IMyMailsProps, IMyMailsStat
     this.ssoRequest.loginHint = this.props.userMail;  
     return this.myMSALObj.ssoSilent(this.ssoRequest).then((response) => {
       return response.accessToken;  
-    }).catch((error) => {  
-        console.log(error);
-        if (error instanceof InteractionRequiredAuthError) {
+    }).catch((silentError) => {  
+        console.log(silentError);
+        if (silentError instanceof InteractionRequiredAuthError) {
           return this.myMSALObj.loginPopup(this.ssoRequest)
           .then((response) => {
             return response.accessToken;
           }) 
-          .catch(error => {
-            if (error.message.indexOf('popup_window_error') > -1) { // Popups are blocked
+          .catch(popupError => {
+            if (popupError.message.indexOf('popup_window_error') > -1) { // Popups are blocked
               return this.redirectLogin(this.ssoRequest);
             }            
           });
