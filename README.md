@@ -1,7 +1,7 @@
 ## msal-20-spfx
 
 ## Summary
-This webpart demosntrates the authentication and access token acquisition with MSAL.js 2.0 inside SharePoint Framework (SPFx). On a button click it tries three login options
+This webpart demosntrates the authentication and access token acquisition with [MSAL.js 2.0](https://github.com/AzureAD/microsoft-authentication-library-for-js/tree/dev/lib/msal-browser) inside SharePoint Framework (SPFx). On a button click it tries three login options
 * silent
 * popup
 * redirect
@@ -10,11 +10,14 @@ and in case a login already took place previously it first tries to acquire in a
 ## msal-20-spfx in action
 ![WebPartInAction](https://mmsharepoint.files.wordpress.com/2020/08/04mailresult.png)
 
-A detailed functionality and technical description can be found in the [author's blog series](https://mmsharepoint.wordpress.com)
+A detailed functionality and technical description can be found in the [author's blog post](https://mmsharepoint.wordpress.com/2020/08/15/using-msal-js-2-0-in-sharepoint-framework-spfx/)
 
 ## Used SharePoint Framework Version
 
 ![drop](https://img.shields.io/badge/drop-1.11.0-green.svg)
+
+## Applies to
+Usage of [MSAL.js 2.0 Authorization Code Flow](https://github.com/AzureAD/microsoft-authentication-library-for-js/tree/dev/lib/msal-browser)
 
 ## Solution
 
